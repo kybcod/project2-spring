@@ -38,7 +38,12 @@ public class BoardController {
         if (board == null) {
             return ResponseEntity.notFound().build();
         }
-        
+
         return ResponseEntity.ok().body(board);
+    }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable Integer id) {
+        service.remove(id);
     }
 }
