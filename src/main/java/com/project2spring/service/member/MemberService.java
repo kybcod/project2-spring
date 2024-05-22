@@ -15,4 +15,12 @@ public class MemberService {
     public void add(Member member) {
         mapper.insert(member);
     }
+
+    public Member getByEmail(String email) {
+        return mapper.selectByEmail(email);
+    }
+
+    public Member getByNickName(String nickName) {
+        return mapper.selectByNickName(nickName);
+    }
 }
