@@ -14,6 +14,6 @@ public interface MemberMapper {
     @Select("SELECT * FROM member WHERE email = #{email}")
     Member selectByEmail(String email);
 
-    @Select("SELECT * FROM member WHERE email = #{nickName}")
+    @Select("SELECT * FROM member WHERE nick_name = #{nickName}")
     Member selectByNickName(String nickName);
 }
