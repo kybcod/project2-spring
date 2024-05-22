@@ -17,7 +17,6 @@ public class BoardController {
 
     @PostMapping("insert")
     public ResponseEntity add(@RequestBody Board board) {
-        System.out.println("board = " + board);
         if (service.validate(board)) {
             service.add(board);
             return ResponseEntity.ok().build();
@@ -29,5 +28,15 @@ public class BoardController {
     @GetMapping("list")
     public List<Board> list() {
         return service.list();
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity get(@PathVariable Integer id) {
+        Board board = service.getById(id);
+        if (board == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(board);
+        }
     }
 }
