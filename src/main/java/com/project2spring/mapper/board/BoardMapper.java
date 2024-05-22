@@ -3,6 +3,9 @@ package com.project2spring.mapper.board;
 import com.project2spring.controller.domain.board.Board;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface BoardMapper {
@@ -11,4 +14,7 @@ public interface BoardMapper {
             VALUES (#{title}, #{content}, #{writer})
             """)
     int insert(Board board);
+
+    @Select("SELECT * FROM board")
+    List<Board> selectAll();
 }
