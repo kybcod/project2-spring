@@ -21,6 +21,9 @@ CREATE TABLE member
     inserted  DATETIME     NOT NULL DEFAULT now()
 );
 
+ALTER TABLE member
+    MODIFY password VARCHAR(200);
+
 SELECT *
 FROM member
 ORDER BY id;
