@@ -1,6 +1,6 @@
 package com.project2spring.controller.board;
 
-import com.project2spring.controller.domain.board.Board;
+import com.project2spring.domain.board.Board;
 import com.project2spring.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

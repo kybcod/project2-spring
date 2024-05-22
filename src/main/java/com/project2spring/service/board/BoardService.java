@@ -1,6 +1,6 @@
 package com.project2spring.service.board;
 
-import com.project2spring.controller.domain.board.Board;
+import com.project2spring.domain.board.Board;
 import com.project2spring.mapper.board.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
