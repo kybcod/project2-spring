@@ -1,6 +1,7 @@
 package com.project2spring.mapper.member;
 
 import com.project2spring.domain.member.Member;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -22,6 +23,9 @@ public interface MemberMapper {
     @Select("SELECT * FROM member")
     List<Member> selectAll();
 
-    @Select("SELECT * FROM member WHERE id = #{id}")
-    void selectById(Integer id);
+    @Select("SELECT id, email, nick_name, inserted FROM member WHERE id = #{id}")
+    Member selectById(Integer id);
+
+    @Delete("DELETE FROM member WHERE id=#{id}")
+    int deleteById(Integer id);
 }
