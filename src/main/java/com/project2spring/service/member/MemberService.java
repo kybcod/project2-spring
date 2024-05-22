@@ -3,6 +3,7 @@ package com.project2spring.service.member;
 import com.project2spring.domain.member.Member;
 import com.project2spring.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,8 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberMapper mapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public void add(Member member) {
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setEmail(member.getEmail().trim());
+        member.setNickName(member.getNickName().trim());
         mapper.insert(member);
     }
 
@@ -40,7 +45,6 @@ public class MemberService {
         if (!member.getEmail().trim().matches(emailPattern)) {
             return false;
         }
-
 
         return true;
     }
