@@ -1,6 +1,7 @@
 package com.project2spring.mapper.board;
 
 import com.project2spring.controller.domain.board.Board;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -20,4 +21,7 @@ public interface BoardMapper {
 
     @Select("SELECT * FROM board WHERE id=#{id}")
     Board selectById(Integer id);
+
+    @Delete("DELETE FROM board WHERE id=#{id}")
+    void deleteById(Integer id);
 }
