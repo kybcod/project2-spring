@@ -1,4 +1,4 @@
-package com.project2spring.controller.domain.board;
+package com.project2spring.domain;
 
 import lombok.Data;
 

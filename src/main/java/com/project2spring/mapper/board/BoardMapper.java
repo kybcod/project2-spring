@@ -1,6 +1,6 @@
 package com.project2spring.mapper.board;
 
-import com.project2spring.controller.domain.board.Board;
+import com.project2spring.domain.Board;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
