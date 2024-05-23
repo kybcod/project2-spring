@@ -105,9 +105,11 @@ public class MemberService {
     }
 
     public Map<String, Object> getToken(Member member) {
+
         Map<String, Object> result = null;
 
         Member db = mapper.selectByEmail(member.getEmail());
+
         if (db != null) {
             if (passwordEncoder.matches(member.getPassword(), db.getPassword())) {
                 result = new HashMap<>();
@@ -125,9 +127,7 @@ public class MemberService {
                 token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
                 result.put("token", token);
             }
-
         }
-
         return result;
     }
 }

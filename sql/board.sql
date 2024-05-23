@@ -21,9 +21,22 @@ CREATE TABLE member
     inserted  DATETIME     NOT NULL DEFAULT now()
 );
 
-ALTER TABLE member
-    MODIFY password VARCHAR(200);
+
+ALTER TABLE board
+    drop column writer;
+
+ALTER TABLE board
+    add column member_id int REFERENCES member (id) AFTER content;
+
+ALTER TABLE board
+    MODIFY COLUMN member_id INT NOT NULL;
+
+UPDATE board
+SET member_id = (SELECT id FROM member ORDER BY id DESC LIMIT 1)
+WHERE id > 0;
 
 SELECT *
-FROM member
+FROM board
 ORDER BY id;
+
+DESC board;

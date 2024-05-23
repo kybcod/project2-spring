@@ -1,8 +1,11 @@
 package com.project2spring.service.board;
 
 import com.project2spring.domain.board.Board;
+import com.project2spring.domain.member.Member;
 import com.project2spring.mapper.board.BoardMapper;
+import com.project2spring.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardMapper mapper;
+    private final MemberMapper memberMapper;
 
-    public void add(Board board) {
+    public void add(Board board, Authentication authentication) {
+        Member member = memberMapper.selectByEmail(authentication.getName());
+        board.setMemberId(member.getId());
         mapper.insert(board);
     }
 
@@ -26,10 +32,6 @@ public class BoardService {
         }
 
         if (board.getContent() == null || board.getContent().isBlank()) {
-            return false;
-        }
-
-        if (board.getWriter() == null || board.getWriter().isBlank()) {
             return false;
         }
 
