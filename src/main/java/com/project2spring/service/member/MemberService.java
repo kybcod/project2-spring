@@ -13,15 +13,37 @@ public class MemberService {
     private final MemberMapper mapper;
 
     public void add(Member member) {
+        member.setEmail(member.getEmail().trim());
+        member.setEmail(member.getNickName().trim());
         mapper.insert(member);
+    }
+
+    public boolean validate(Member member) {
+        if (member.getNickName() == null || member.getNickName().isBlank()) {
+            return false;
+        }
+        if (member.getPassword() == null || member.getPassword().isBlank()) {
+            return false;
+        }
+        if (member.getEmail() == null || member.getEmail().isBlank()) {
+            return false;
+        }
+
+        String emailPatter = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
+        if (!member.getEmail().matches(emailPatter)) {
+            return false;
+        }
+
+        return true;
     }
 
     public Member getByEmail(String email) {
         return mapper.selectByEmail(email);
     }
 
-
     public Member getByNickName(String nickName) {
         return mapper.selectByNicKName(nickName);
     }
+
+
 }
