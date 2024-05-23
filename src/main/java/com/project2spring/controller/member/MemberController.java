@@ -36,6 +36,7 @@ public class MemberController {
 
     @GetMapping(value = "check", params = "nickName")
     public ResponseEntity checkNickName(String nickName) {
+        System.out.println("nickName = " + nickName);
         Member member = service.getByNickName(nickName);
         if (member == null) {
             return ResponseEntity.notFound().build();
@@ -50,7 +51,6 @@ public class MemberController {
 
     @GetMapping("{id}")
     public ResponseEntity get(@PathVariable Integer id) {
-        System.out.println("id = " + id);
         Member member = service.get(id);
         if (member == null) {
             return ResponseEntity.notFound().build();
@@ -65,6 +65,18 @@ public class MemberController {
             service.delete(member.getId());
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
+
+    @PutMapping("modify")
+    public ResponseEntity modify(@RequestBody Member member) {
+        if (service.hasAccessModify(member)) {
+            service.modify(member);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+
 }
