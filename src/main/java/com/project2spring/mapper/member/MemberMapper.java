@@ -32,4 +32,7 @@ public interface MemberMapper {
 
     @Select("SELECT * FROM member")
     List<Member> selectAll();
+
+    @Select("SELECT * FROM member WHERE id = ${id}")
+    Member selectById(Integer id);
 }
