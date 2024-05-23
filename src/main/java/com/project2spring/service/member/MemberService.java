@@ -12,7 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
     private final MemberMapper mapper;
 
-    public Member join(Member member) {
-        return mapper.insert(member);
+    public void add(Member member) {
+        mapper.insert(member);
+    }
+
+    public Member getByEmail(String email) {
+        return mapper.selectByEmail(email);
+    }
+
+
+    public Member getByNickName(String nickName) {
+        return mapper.selectByNicKName(nickName);
     }
 }
