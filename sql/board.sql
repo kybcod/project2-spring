@@ -21,7 +21,6 @@ CREATE TABLE member
     inserted  DATETIME     NOT NULL DEFAULT now()
 );
 
-
 ALTER TABLE board
     drop column writer;
 
