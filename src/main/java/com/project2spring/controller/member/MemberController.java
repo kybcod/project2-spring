@@ -52,7 +52,12 @@ public class MemberController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity get(@PathVariable Integer id) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity get(@PathVariable Integer id, Authentication authentication) {
+        if (!service.hasAccess(id, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Member member = service.get(id);
         if (member == null) {
             return ResponseEntity.notFound().build();
