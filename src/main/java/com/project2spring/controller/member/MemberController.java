@@ -67,4 +67,13 @@ public class MemberController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+    @PutMapping("edit")
+    public ResponseEntity edit(@RequestBody Member member) {
+        if (service.hasAccessModify(member)) {
+            service.modify(member);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
 }

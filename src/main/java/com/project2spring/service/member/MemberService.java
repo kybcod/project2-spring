@@ -69,4 +69,26 @@ public class MemberService {
         }
         return passwordEncoder.matches(member.getPassword(), db.getPassword());
     }
+
+    public boolean hasAccessModify(Member member) {
+        Member dbmember = mapper.selectById(member.getId());
+        if (dbmember == null) {
+            return false;
+        }
+
+        if (!passwordEncoder.matches(member.getPassword(), dbmember.getPassword())) {
+            return false;
+        }
+        return true;
+    }
+
+    public void modify(Member member) {
+        if (member.getPassword() != null && member.getPassword().trim().length() > 0) {
+            member.setPassword(passwordEncoder.encode(member.getPassword()));
+        } else {
+            Member db = mapper.selectById(member.getId());
+            member.setPassword(db.getPassword());
+        }
+        mapper.update(member);
+    }
 }
