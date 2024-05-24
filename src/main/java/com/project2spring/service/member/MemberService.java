@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -127,6 +128,8 @@ public class MemberService {
             if (passwordEncoder.matches(member.getPassword(), db.getPassword())) {
                 result = new HashMap<>();
                 String token = "";
+                List<String> authority = mapper.selectAuthorityByMemberId(db.getId());
+                String authorityString = authority.stream().collect(Collectors.joining(" "));
 
                 // 토큰 만드는 코드
                 JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -134,7 +137,7 @@ public class MemberService {
                         .issuedAt(Instant.now())
                         .expiresAt(Instant.now().plusSeconds(60 * 60 * 24 * 7)) //일주일
                         .subject(db.getId().toString())
-                        .claim("scope", "") //권한
+                        .claim("scope", authorityString) //권한
                         .claim("nickName", db.getNickName())
                         .build();
                 token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

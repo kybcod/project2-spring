@@ -28,4 +28,7 @@ public interface MemberMapper {
 
     @Update("UPDATE member SET password=#{password}, nick_name=#{nickName} WHERE id=#{id}")
     int update(Member member);
+
+    @Select("SELECT name FROM authority WHERE member_id = #{memberId}")
+    List<String> selectAuthorityByMemberId(Integer memberId);
 }
