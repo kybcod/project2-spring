@@ -5,6 +5,8 @@ import com.project2spring.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,8 +62,10 @@ public class MemberController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@RequestBody Member member) {
-        if (service.hasAccess(member)) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity delete(@RequestBody Member member,
+                                 Authentication authentication) {
+        if (service.hasAccess(member, authentication)) {
             service.delete(member.getId());
             return ResponseEntity.ok().build();
         }
