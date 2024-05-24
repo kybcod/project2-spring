@@ -37,7 +37,7 @@ public interface BoardMapper {
     int deleteById(Integer id);
 
     @Update("""
-            UPDATE board SET title=#{title}, content=#{content}, member_id=#{memberId}
+            UPDATE board SET title=#{title}, content=#{content}
             WHERE id=#{id}
             """)
     int update(Board board);
