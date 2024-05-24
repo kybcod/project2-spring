@@ -85,8 +85,6 @@ public class MemberController {
     @PostMapping("token")
     public ResponseEntity token(@RequestBody Member member) {
         Map<String, Object> map = service.getToken(member);
-
-
         if (map == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

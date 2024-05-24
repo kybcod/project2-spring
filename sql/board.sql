@@ -35,7 +35,20 @@ SET member_id = (SELECT id FROM member ORDER BY id DESC LIMIT 1)
 WHERE id > 0;
 
 SELECT *
-FROM board
+FROM member
 ORDER BY id;
+
+SELECT *
+FROM member
+WHERE id = 23;
+
+DELETE
+FROM board
+WHERE member_id = 23;
+
+DELETE
+FROM member
+WHERE id = 23;
+
 
 DESC board;
