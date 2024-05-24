@@ -51,4 +51,9 @@ public class BoardService {
     public void edit(Board board) {
         mapper.update(board);
     }
+
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        Board board = mapper.selectById(id); //게시물 번호
+        return board.getMemberId().equals(Integer.valueOf(authentication.getName()));
+    }
 }
