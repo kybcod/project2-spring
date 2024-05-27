@@ -45,11 +45,16 @@ public class BoardService {
         Integer lastPageNumber = (countAll - 1) / 10 + 1;
         Integer leftPageNumber = (page - 1) / 10 * 10 + 1; // 현재 페이지 기준 왼쪽
         Integer rightPageNumber = leftPageNumber + 9; // 현재 페이지 기준 오른쪽
+        Integer nextPageNumber = leftPageNumber + 10;
+        Integer prevPageNumber = leftPageNumber - 10;
+        rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
 
         pageInfo.put("currentPageNumber", page);
         pageInfo.put("lastPageNumber", lastPageNumber);
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
+        pageInfo.put("nextPageNumber", nextPageNumber);
+        pageInfo.put("prevPageNumber", prevPageNumber);
 
         return Map.of("pageInfo", pageInfo,
                 "boardList", mapper.selectAllPaging(offset));
