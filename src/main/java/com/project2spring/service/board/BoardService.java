@@ -45,16 +45,26 @@ public class BoardService {
         Integer lastPageNumber = (countAll - 1) / 10 + 1;
         Integer leftPageNumber = (page - 1) / 10 * 10 + 1; // 현재 페이지 기준 왼쪽
         Integer rightPageNumber = leftPageNumber + 9; // 현재 페이지 기준 오른쪽
-        Integer nextPageNumber = leftPageNumber + 10;
-        Integer prevPageNumber = leftPageNumber - 10;
+        Integer nextPageNumber = rightPageNumber + 1; // 다음
+        Integer prevPageNumber = leftPageNumber - 1; // 이전
         rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
+        leftPageNumber = rightPageNumber - 9;
+        leftPageNumber = Math.max(leftPageNumber, 1);
+        
+        // lastPageNumber는 10씩 끊어주기 때문에 전체 페이지 수보다 클 수 있다.
+
+        if (prevPageNumber > 0) {
+            pageInfo.put("prevPageNumber", prevPageNumber);
+        }
+
+        if (nextPageNumber <= lastPageNumber) {
+            pageInfo.put("nextPageNumber", nextPageNumber);
+        }
 
         pageInfo.put("currentPageNumber", page);
         pageInfo.put("lastPageNumber", lastPageNumber);
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
-        pageInfo.put("nextPageNumber", nextPageNumber);
-        pageInfo.put("prevPageNumber", prevPageNumber);
 
         return Map.of("pageInfo", pageInfo,
                 "boardList", mapper.selectAllPaging(offset));

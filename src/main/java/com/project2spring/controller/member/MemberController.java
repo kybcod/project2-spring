@@ -9,7 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -48,8 +47,8 @@ public class MemberController {
 
     @GetMapping("list")
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public List<Member> list() {
-        return service.list();
+    public Map<String, Object> list(@RequestParam(defaultValue = "1") Integer page) {
+        return service.list(page);
     }
 
     @GetMapping("{id}")

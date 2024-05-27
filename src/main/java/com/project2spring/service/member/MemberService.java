@@ -63,8 +63,12 @@ public class MemberService {
         return true;
     }
 
-    public List<Member> list() {
-        return mapper.selectAll();
+    public Map<String, Object> list(Integer page) {
+        Map<String, Object> memberPageInfo = new HashMap<>();
+        Integer offset = (page - 1) * 10;
+
+        return Map.of("memberList", mapper.selectAllPaging(offset),
+                "memberPageInfo", memberPageInfo);
     }
 
     public Member get(Integer id) {
