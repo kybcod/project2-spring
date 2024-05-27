@@ -37,7 +37,9 @@ public class BoardService {
         return true;
     }
 
-    public Map<String, Object> list(Integer page) {
+    public Map<String, Object> list(Integer page, String type, String keyword) {
+
+        // 페이지 번호
         Map pageInfo = new HashMap();
         Integer countAll = mapper.countAll();
 
@@ -50,7 +52,7 @@ public class BoardService {
         rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
         leftPageNumber = rightPageNumber - 9;
         leftPageNumber = Math.max(leftPageNumber, 1);
-        
+
         // lastPageNumber는 10씩 끊어주기 때문에 전체 페이지 수보다 클 수 있다.
 
         if (prevPageNumber > 0) {
@@ -66,8 +68,10 @@ public class BoardService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
+        // 검색어
+
         return Map.of("pageInfo", pageInfo,
-                "boardList", mapper.selectAllPaging(offset));
+                "boardList", mapper.selectAllPaging(offset, type, keyword));
     }
 
     public Board get(Integer id) {

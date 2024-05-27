@@ -30,8 +30,10 @@ public class BoardController {
     }
 
     @GetMapping("list")
-    public Map<String, Object> list(@RequestParam(defaultValue = "1") Integer page) {
-        return service.list(page);
+    public Map<String, Object> list(@RequestParam(defaultValue = "1") Integer page,
+                                    @RequestParam(value = "type", required = false) String type,
+                                    @RequestParam(defaultValue = "", value = "keyword", required = false) String keyword) {
+        return service.list(page, type, keyword);
     }
 
     // /api/board/5
