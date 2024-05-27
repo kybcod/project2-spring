@@ -76,4 +76,23 @@ public interface BoardMapper {
     List<Board> selectAllPaging(Integer offset, String searchType, String keyword);
 
 
+    @Select("""
+            <script>
+             SELECT COUNT(b.id)
+             FROM board b JOIN member m ON b.member_id = m.id
+                <trim prefix="WHERE" prefixOverrides="OR">
+                    <if test="searchType != null">
+                        <bind name="pattern" value="'%' + keyword + '%'" />
+                        <if test="searchType == 'all' || searchType == 'text'">
+                            OR b.title LIKE #{pattern}
+                            OR b.content LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'all' || searchType == 'nickName'">
+                            OR m.nick_name LIKE #{pattern}
+                        </if>
+                    </if>
+                </trim>
+             </script>
+             """)
+    Integer countAllWithSearch(String searchType, String keyword);
 }

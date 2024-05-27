@@ -37,11 +37,11 @@ public class BoardService {
         return true;
     }
 
-    public Map<String, Object> list(Integer page, String type, String keyword) {
+    public Map<String, Object> list(Integer page, String searchType, String keyword) {
 
         // 페이지 번호
         Map pageInfo = new HashMap();
-        Integer countAll = mapper.countAll();
+        Integer countAll = mapper.countAllWithSearch(searchType, keyword);
 
         Integer offset = (page - 1) * 10;
         Integer lastPageNumber = (countAll - 1) / 10 + 1;
@@ -71,7 +71,7 @@ public class BoardService {
         // 검색어
 
         return Map.of("pageInfo", pageInfo,
-                "boardList", mapper.selectAllPaging(offset, type, keyword));
+                "boardList", mapper.selectAllPaging(offset, searchType, keyword));
     }
 
     public Board get(Integer id) {
