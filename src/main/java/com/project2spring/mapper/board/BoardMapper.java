@@ -48,6 +48,9 @@ public interface BoardMapper {
             """)
     int deleteByMemberId(Integer memberId);
 
+    @Select("SELECT COUNT(*) FROM board")
+    Integer countAll();
+
     @Select("""
             SELECT b.id, b.title , m.nick_name writer
             FROM board b JOIN member m 
@@ -56,6 +59,5 @@ public interface BoardMapper {
             LIMIT #{offset}, 10 
             """)
     List<Board> selectAllPaging(Integer offset);
-    // ? : offset, 1페이지는 0~10개, 2페이지는 11~20
 
 }
