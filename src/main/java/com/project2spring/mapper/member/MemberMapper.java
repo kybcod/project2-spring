@@ -33,6 +33,14 @@ public interface MemberMapper {
     @Select("SELECT name FROM authority WHERE member_id = #{memberId}")
     List<String> selectAuthorityByMemberId(Integer memberId);
 
-    @Select("SELECT * FROM member WHERE id = #{id} ORDER BY id DESC LIMIT #{offset}, 10 ")
+    @Select("""
+            SELECT id, email, password, nick_name, inserted
+            FROM member
+            ORDER BY id DESC
+            LIMIT #{offset}, 10 
+            """)
     List<Board> selectAllPaging(Integer offset);
+
+    @Select("SELECT COUNT(*) FROM member")
+    Integer countAll();
 }

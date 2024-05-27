@@ -66,6 +66,11 @@ public class MemberService {
     public Map<String, Object> list(Integer page) {
         Map<String, Object> memberPageInfo = new HashMap<>();
         Integer offset = (page - 1) * 10;
+        Integer countAll = mapper.countAll();
+        Integer lastPage = (countAll - 1) / 10 + 1;
+
+        memberPageInfo.put("currentPage", page);
+        memberPageInfo.put("lastPage", lastPage);
 
         return Map.of("memberList", mapper.selectAllPaging(offset),
                 "memberPageInfo", memberPageInfo);
