@@ -102,3 +102,25 @@ SET title   = 'yz1 234',
     content = '567 890'
 WHERE id % 3 = 2;
 
+SELECT *
+FROM member;
+
+INSERT INTO member (email, password, nick_name)
+VALUES ('222222@222222', 123, 222222);
+INSERT INTO member (email, password, nick_name)
+VALUES ('333333@333333', 123, 333333);
+INSERT INTO member (email, password, nick_name)
+VALUES ('444444@444444', 123, 444444);
+INSERT INTO member (email, password, nick_name)
+VALUES ('555555@555555', 123, 555555);
+INSERT INTO member (email, password, nick_name)
+VALUES ('666666@666666', 123, 666666);
+INSERT INTO member (email, password, nick_name)
+VALUES ('777777@777777', 123, 777777);
+INSERT INTO member (email, password, nick_name)
+VALUES ('888888@888888', 123, 888888);
+INSERT INTO member (email, password, nick_name)
+VALUES ('999999@999999', 123, 999999);
+INSERT INTO member (email, password, nick_name)
+VALUES ('111111@111111', 123, 111111);
+
