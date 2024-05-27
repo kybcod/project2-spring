@@ -62,3 +62,8 @@ CREATE TABLE authority
 
 INSERT INTO authority (member_id, name)
 VALUES (23, 'admin');
+
+# 게시물 여러 개 입력
+INSERT INTO board (title, content, member_id)
+SELECT title, content, member_id
+FROM board;
