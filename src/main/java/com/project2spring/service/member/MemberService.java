@@ -63,7 +63,7 @@ public class MemberService {
         return true;
     }
 
-    public Map<String, Object> list(Integer page) {
+    public Map<String, Object> list(Integer page, String type, String keyword) {
         Map<String, Object> memberPageInfo = new HashMap<>();
         Integer offset = (page - 1) * 10;
         Integer countAll = mapper.countAll();
@@ -87,7 +87,7 @@ public class MemberService {
         memberPageInfo.put("beginPage", beginPage);
         memberPageInfo.put("endPage", endPage);
 
-        return Map.of("memberList", mapper.selectAllPaging(offset),
+        return Map.of("memberList", mapper.selectAllPaging(offset, type, keyword),
                 "memberPageInfo", memberPageInfo);
     }
 

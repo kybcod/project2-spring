@@ -33,12 +33,25 @@ public interface MemberMapper {
     List<String> selectAuthorityByMemberId(Integer memberId);
 
     @Select("""
+            <script>
             SELECT id, email, password, nick_name, inserted
             FROM member
+            <trim prefix="WHERE" prefixOverrides="OR">
+                <if test="type != null">
+                    <bind name="pattern" value="'%' + keyword + '%'" />
+                    <if test="type == 'all' || type == 'email'">
+                        OR email LIKE #{pattern}
+                    </if>
+                     <if test="type == 'all' || type == 'nick_name'">
+                        OR nick_name LIKE #{pattern}
+                    </if>
+                </if>
+            </trim>
             ORDER BY id DESC
             LIMIT #{offset}, 10
+            </script>
             """)
-    List<Member> selectAllPaging(Integer offset);
+    List<Member> selectAllPaging(Integer offset, String type, String keyword);
 
     @Select("SELECT COUNT(*) FROM member")
     Integer countAll();
