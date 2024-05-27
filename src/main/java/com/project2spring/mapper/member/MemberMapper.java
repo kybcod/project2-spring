@@ -1,6 +1,5 @@
 package com.project2spring.mapper.member;
 
-import com.project2spring.domain.board.Board;
 import com.project2spring.domain.member.Member;
 import org.apache.ibatis.annotations.*;
 
@@ -39,7 +38,7 @@ public interface MemberMapper {
             ORDER BY id DESC
             LIMIT #{offset}, 10 
             """)
-    List<Board> selectAllPaging(Integer offset);
+    List<Member> selectAllPaging(Integer offset);
 
     @Select("SELECT COUNT(*) FROM member")
     Integer countAll();
