@@ -36,7 +36,7 @@ public interface MemberMapper {
             SELECT id, email, password, nick_name, inserted
             FROM member
             ORDER BY id DESC
-            LIMIT #{offset}, 10 
+            LIMIT #{offset}, 10
             """)
     List<Member> selectAllPaging(Integer offset);
 

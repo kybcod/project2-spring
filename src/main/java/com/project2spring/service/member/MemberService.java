@@ -68,9 +68,24 @@ public class MemberService {
         Integer offset = (page - 1) * 10;
         Integer countAll = mapper.countAll();
         Integer lastPage = (countAll - 1) / 10 + 1;
+        Integer beginPage = (page - 1) / 5 * 5 + 1;
+        Integer endPage = beginPage + 4;
+        endPage = Math.min(endPage, lastPage);
+        Integer nextPage = beginPage + 5;
+        Integer prevPage = beginPage - 5;
+
+        if (nextPage <= lastPage) {
+            memberPageInfo.put("nextPage", nextPage);
+        }
+
+        if (prevPage > 0) {
+            memberPageInfo.put("prevPage", prevPage);
+        }
 
         memberPageInfo.put("currentPage", page);
         memberPageInfo.put("lastPage", lastPage);
+        memberPageInfo.put("beginPage", beginPage);
+        memberPageInfo.put("endPage", endPage);
 
         return Map.of("memberList", mapper.selectAllPaging(offset),
                 "memberPageInfo", memberPageInfo);
