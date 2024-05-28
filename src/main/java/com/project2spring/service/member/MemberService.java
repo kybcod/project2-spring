@@ -1,8 +1,10 @@
 package com.project2spring.service.member;
 
+import com.project2spring.domain.board.Board;
 import com.project2spring.domain.member.Member;
 import com.project2spring.mapper.board.BoardMapper;
 import com.project2spring.mapper.member.MemberMapper;
+import com.project2spring.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +29,7 @@ public class MemberService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtEncoder jwtEncoder;
     private final BoardMapper boardMapper;
+    private final BoardService boardService;
 
     public void add(Member member) {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -96,8 +99,11 @@ public class MemberService {
     }
 
     public void delete(Integer id) {
-        // board 테이블에서 작성한 글 지우기
-        boardMapper.deleteByMemberId(id);
+        // 회원이 쓴 게시물 조회
+        List<Board> boardList = boardMapper.selectByMemberId(id);
+
+        // 각 게시물 지우기
+        boardList.forEach(board -> boardService.remove(board.getId()));
 
         // board 지운 후 member 테이블 지우기
         mapper.deleteById(id);

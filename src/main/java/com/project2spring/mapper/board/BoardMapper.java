@@ -117,4 +117,8 @@ public interface BoardMapper {
             """)
     int deleteFileByBoardId(Integer boardId);
 
+    @Select("""
+            SELECT id FROM board WHERE member_id=#{memberId}
+            """)
+    List<Board> selectByMemberId(Integer memberId);
 }
