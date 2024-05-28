@@ -127,3 +127,13 @@ VALUES ('111111@111111', 123, 111111);
 SELECT *
 FROM member
 WHERE nick_name LIKE '%1%';
+
+CREATE TABLE board_file
+(
+    board_id INT          NOT NULL REFERENCES board (id),
+    name     VARCHAR(500) NOT NULL,
+    PRIMARY KEY (board_id, name)
+);
+
+SELECT *
+FROM board_file;

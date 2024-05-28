@@ -24,16 +24,8 @@ public class BoardController {
     public ResponseEntity add(Authentication authentication,
                               Board board, @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws InterruptedException {
 
-        if (files != null) {
-            System.out.println("board.getFiles().length = " + files.length);
-            for (MultipartFile file : files) {
-                System.out.println("file.getName() = " + file.getOriginalFilename());
-            }
-        }
-
-
         if (service.validate(board)) {
-            service.add(board, authentication);
+            service.add(board, files, authentication);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
