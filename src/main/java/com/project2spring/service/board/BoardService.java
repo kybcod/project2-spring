@@ -112,6 +112,25 @@ public class BoardService {
     }
 
     public void remove(Integer id) {
+
+        // file명 조회
+        List<String> fileNames = mapper.selectFileNameByBoardId(id);
+
+        // disk에 있는 file 삭제
+        String dir = STR."C:/Temp/prj2/\{id}/";
+        for (String fileName : fileNames) {
+            File file = new File(dir + fileName);
+            file.delete();
+        }
+        File dirFile = new File(dir);
+        if (dirFile.exists()) {
+            dirFile.delete();
+        }
+
+        // board_file 삭제
+        mapper.deleteFileByBoardId(id);
+
+        // board
         mapper.deleteById(id);
     }
 
