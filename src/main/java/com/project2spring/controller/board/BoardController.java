@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -20,7 +21,17 @@ public class BoardController {
 
     @PostMapping("add")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity add(Authentication authentication, @RequestBody Board board) throws InterruptedException {
+    public ResponseEntity add(Authentication authentication,
+                              Board board, @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws InterruptedException {
+
+        if (files != null) {
+            System.out.println("board.getFiles().length = " + files.length);
+            for (MultipartFile file : files) {
+                System.out.println("file.getName() = " + file.getOriginalFilename());
+            }
+        }
+
+
         if (service.validate(board)) {
             service.add(board, authentication);
             return ResponseEntity.ok().build();
