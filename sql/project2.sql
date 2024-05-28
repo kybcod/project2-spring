@@ -128,6 +128,10 @@ SELECT *
 FROM member
 WHERE nick_name LIKE '%1%';
 
+SELECT COUNT(*)
+FROM member
+WHERE email LIKE '%3%';
+
 CREATE TABLE board_file
 (
     board_id INT          NOT NULL REFERENCES board (id),
