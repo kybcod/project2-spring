@@ -140,4 +140,5 @@ CREATE TABLE board_file
 );
 
 SELECT *
-FROM board_file;
+FROM board_file
+WHERE board_file.board_id = 955;
