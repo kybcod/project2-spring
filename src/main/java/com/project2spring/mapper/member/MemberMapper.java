@@ -71,4 +71,10 @@ public interface MemberMapper {
             </script>
             """)
     Integer countAll(String type, String keyword);
+
+    @Insert("""
+            INSERT INTO member (email, password, nick_name)
+            VALUES (#{email}, #{password}, #{nick_name})
+            """)
+    int insetFileName(Integer id, String originalFilename);
 }
