@@ -142,3 +142,16 @@ CREATE TABLE board_file
 SELECT *
 FROM board_file
 WHERE board_file.board_id = 955;
+
+
+SELECT id, email, password, nick_name, inserted
+FROM member
+WHERE email LIKE '%111%'
+   OR nick_name LIKE '%111%'
+ORDER BY id DESC;
+# LIMIT 10, 10;
+
+
+SELECT COUNT(*)
+FROM member
+WHERE email LIKE '%111%';

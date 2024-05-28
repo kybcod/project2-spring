@@ -42,7 +42,7 @@ public interface MemberMapper {
                     <if test="type == 'all' || type == 'email'">
                         OR email LIKE #{pattern}
                     </if>
-                     <if test="type == 'all' || type == 'nick_name'">
+                     <if test="type == 'all' || type == 'nickName'">
                         OR nick_name LIKE #{pattern}
                     </if>
                 </if>
@@ -53,6 +53,22 @@ public interface MemberMapper {
             """)
     List<Member> selectAllPaging(Integer offset, String type, String keyword);
 
-    @Select("SELECT COUNT(*) FROM member")
-    Integer countAll();
+    @Select("""
+            <script>
+            SELECT COUNT(id)
+            FROM member
+            <trim prefix="WHERE" prefixOverrides="OR">
+                <if test="type != null">
+                    <bind name="pattern" value="'%' + keyword + '%'" />
+                    <if test="type == 'all' || type == 'email'">
+                        OR email LIKE #{pattern}
+                    </if>
+                     <if test="type == 'all' || type == 'nickName'">
+                        OR nick_name LIKE #{pattern}
+                    </if>
+                </if>
+            </trim>
+            </script>
+            """)
+    Integer countAll(String type, String keyword);
 }

@@ -69,7 +69,7 @@ public class MemberService {
     public Map<String, Object> list(Integer page, String type, String keyword) {
         Map<String, Object> memberPageInfo = new HashMap<>();
         Integer offset = (page - 1) * 10;
-        Integer countAll = mapper.countAll();
+        Integer countAll = mapper.countAll(type, keyword);
         Integer lastPage = (countAll - 1) / 10 + 1;
         Integer beginPage = (page - 1) / 5 * 5 + 1;
         Integer endPage = beginPage + 4;
