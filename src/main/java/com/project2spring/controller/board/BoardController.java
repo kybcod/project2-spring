@@ -43,7 +43,6 @@ public class BoardController {
 
     // /api/board/5
     @GetMapping("{id}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity get(@PathVariable Integer id, Authentication authentication) {
         Map<String, Object> result = (Map<String, Object>) service.get(id, authentication);
 
