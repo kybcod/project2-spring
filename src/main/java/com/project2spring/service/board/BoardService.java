@@ -16,7 +16,6 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -149,7 +148,7 @@ public class BoardService {
     public void edit(Board board, List<String> removeFileList, MultipartFile[] addFileList) throws IOException {
         if (removeFileList != null && removeFileList.size() > 0) {
 
-            // disk의 파일 삭제
+            // s3의 파일 삭제
             for (String fileName : removeFileList) {
                 String key = STR."prj2/\{board.getId()}/\{fileName}";
                 DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
@@ -171,16 +170,17 @@ public class BoardService {
                     // 새 파일이 없을 때만 새 파일 DB에 추가
                     mapper.insertFileName(board.getId(), fileName);
                 }
-                // disk에 쓰기
-                String dir = STR."C:/Temp/prj2/\{board.getId()}";
-                File dirFile = new File(dir);
-                if (!dirFile.exists()) {
-                    dirFile.mkdirs();
-                }
 
-                String path = STR."C:/Temp/prj2/\{board.getId()}/\{fileName}";
-                File destination = new File(path);
-                file.transferTo(destination);
+                // s3에 쓰기
+                String key = STR."prj2/\{board.getId()}/\{fileName}";
+                PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .acl(ObjectCannedACL.PUBLIC_READ)
+                        .build();
+
+                s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
             }
         }
 
