@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -31,6 +32,9 @@ public class BoardService {
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
+
+    @Value("${image.src.prefix}")
+    String srcPrefix;
 
     public void add(Board board, MultipartFile[] files, Authentication authentication) throws IOException {
         board.setMemberId(Integer.valueOf(authentication.getName()));
@@ -107,16 +111,15 @@ public class BoardService {
                 "boardList", mapper.selectAllPaging(offset, searchType, keyword));
     }
 
+
     // 게시물 하나 조회
     public Board get(Integer id) {
         Board board = mapper.selectById(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
         List<BoardFile> files = fileNames.stream()
-                .map(name -> new BoardFile(name, STR."http://172.30.1.56:8888/\{id}/\{name}"))
+                .map(name -> new BoardFile(name, STR."\{srcPrefix}\{id}/\{name}"))
                 .toList();
         board.setFileList(files);
-
-        // http://172.30.1.56:8888/{id}/{name}
         return board;
     }
 
@@ -125,15 +128,15 @@ public class BoardService {
         // file명 조회
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
 
-        // disk에 있는 file 삭제
-        String dir = STR."C:/Temp/prj2/\{id}/";
+        // s3에 있는 file 삭제
         for (String fileName : fileNames) {
-            File file = new File(dir + fileName);
-            file.delete();
-        }
-        File dirFile = new File(dir);
-        if (dirFile.exists()) {
-            dirFile.delete();
+            String key = STR."prj2/\{id}/\{fileName}";
+            DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(objectRequest);
         }
 
         // board_file 삭제
@@ -148,9 +151,12 @@ public class BoardService {
 
             // disk의 파일 삭제
             for (String fileName : removeFileList) {
-                String path = STR."C:/Temp/prj2/\{board.getId()}/\{fileName}";
-                File file = new File(path);
-                file.delete();
+                String key = STR."prj2/\{board.getId()}/\{fileName}";
+                DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .build();
+                s3Client.deleteObject(objectRequest);
 
                 // db records 삭제
                 mapper.deleteFileByBoardIdAndName(board.getId(), fileName);
