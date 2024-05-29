@@ -197,11 +197,11 @@ public class BoardService {
         Integer boardId = (Integer) req.get("boardId");
         Integer memberId = Integer.valueOf(authentication.getName());
 
-        // 이미 좋아요가 되어 있다면 delete(count=0)
+        // 이미 좋아요가 되어 있다면 delete(count=1)
         int count = mapper.deleteLikeByBoardIdAndMemberId(boardId, memberId);
 
         // 좋아요 안했으면 insert
-        if (count == 1) {
+        if (count == 0) {
             mapper.insertLikeByBoardIdAndMemberId(boardId, memberId);
         }
     }
