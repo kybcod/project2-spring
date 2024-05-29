@@ -192,4 +192,17 @@ public class BoardService {
         Board board = mapper.selectById(id); //게시물 번호
         return board.getMemberId().equals(Integer.valueOf(authentication.getName()));
     }
+
+    public void like(Map<String, Object> req, Authentication authentication) {
+        Integer boardId = (Integer) req.get("boardId");
+        Integer memberId = Integer.valueOf(authentication.getName());
+
+        // 이미 좋아요가 되어 있다면 delete(count=0)
+        int count = mapper.deleteLikeByBoardIdAndMemberId(boardId, memberId);
+
+        // 좋아요 안했으면 insert
+        if (count == 1) {
+            mapper.insertLikeByBoardIdAndMemberId(boardId, memberId);
+        }
+    }
 }
