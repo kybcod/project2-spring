@@ -160,6 +160,9 @@ public class BoardService {
         // board_file 삭제
         mapper.deleteFileByBoardId(id);
 
+        // board_like 삭제
+        mapper.deleteLikeByBoardId(id);
+
         // board
         mapper.deleteById(id);
     }
