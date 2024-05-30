@@ -53,32 +53,34 @@ public interface BoardMapper {
     Integer countAll();
 
     @Select("""
-            <script>
+                <script>
             SELECT b.id, 
                    b.title,
                    m.nick_name writer,
                    COUNT(DISTINCT f.name) number_of_images,
-                   COUNT(DISTINCT l.member_id) number_of_like
+                   COUNT(DISTINCT l.member_id) number_of_like,
+                   COUNT(c.id) number_of_comment
             FROM board b JOIN member m ON b.member_id = m.id 
                          LEFT JOIN board_file f ON b.id = f.board_id
                          LEFT JOIN board_like l ON b.id = l.board_id
-               <trim prefix="WHERE" prefixOverrides="OR">
-                   <if test="searchType != null">
-                       <bind name="pattern" value="'%' + keyword + '%'" />
-                       <if test="searchType == 'all' || searchType == 'text'">
-                           OR b.title LIKE #{pattern}
-                           OR b.content LIKE #{pattern}
+                         LEFT JOIN comment c ON b.id = c.board_id
+                   <trim prefix="WHERE" prefixOverrides="OR">
+                       <if test="searchType != null">
+                           <bind name="pattern" value="'%' + keyword + '%'" />
+                           <if test="searchType == 'all' || searchType == 'text'">
+                               OR b.title LIKE #{pattern}
+                               OR b.content LIKE #{pattern}
+                           </if>
+                           <if test="searchType == 'all' || searchType == 'nickName'">
+                               OR m.nick_name LIKE #{pattern}
+                           </if>
                        </if>
-                       <if test="searchType == 'all' || searchType == 'nickName'">
-                           OR m.nick_name LIKE #{pattern}
-                       </if>
-                   </if>
-               </trim>
-            GROUP BY b.id
-            ORDER BY b.id DESC
-            LIMIT #{offset}, 10
-            </script>
-            """)
+                   </trim>
+                GROUP BY b.id
+                ORDER BY b.id DESC
+                LIMIT #{offset}, 10
+                </script>
+                """)
     List<Board> selectAllPaging(Integer offset, String searchType, String keyword);
 
 

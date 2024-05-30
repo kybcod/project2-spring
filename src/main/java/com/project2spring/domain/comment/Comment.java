@@ -11,4 +11,5 @@ public class Comment {
     private Integer memberId;
     private String comment;
     private LocalDateTime inserted;
+    private String nickName;
 }
