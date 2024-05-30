@@ -184,3 +184,8 @@ CREATE TABLE comment(
 );
 
 SELECT * FROM comment ORDER BY inserted DESC ;
+
+SELECT * FROM authority;
+
+ALTER TABLE board ADD COLUMN profile VARCHAR(500);
+SELECT profile FROM board ;

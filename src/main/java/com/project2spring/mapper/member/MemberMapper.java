@@ -73,8 +73,8 @@ public interface MemberMapper {
     Integer countAll(String type, String keyword);
 
     @Insert("""
-            INSERT INTO member (email, password, nick_name)
-            VALUES (#{email}, #{password}, #{nick_name})
+            INSERT INTO member (id, profile)
+            VALUES (#{id}, #{profile})
             """)
-    int insetFileName(Integer id, String originalFilename);
+    int insetFileName(Integer id, String profile);
 }
