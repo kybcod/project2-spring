@@ -165,3 +165,11 @@ CREATE TABLE board_like
 
 SELECT *
 FROM board_like;
+
+USE prj2;
+SELECT b.id, COUNT(DISTINCT f.name), COUNT(DISTINCT ,l.member_id)
+FROM board b
+         JOIN member m ON b.member_id = m.id
+         LEFT JOIN board_file f on b.id = f.board_id
+         LEFT JOIN board_like l on b.id = l.board_id
+WHERE b.id = 1;
