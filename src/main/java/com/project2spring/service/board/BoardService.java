@@ -116,6 +116,7 @@ public class BoardService {
 
         Map<String, Object> result = new HashMap<>();
 
+        mapper.updateViewCount(id);
         Board board = mapper.selectById(id);
 
         // 파일

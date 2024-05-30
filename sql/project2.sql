@@ -187,5 +187,12 @@ SELECT * FROM comment ORDER BY inserted DESC ;
 
 SELECT * FROM authority;
 
+# 조회수
+ALTER TABLE board ADD COLUMN view INT DEFAULT 0;
+UPDATE board SET view = 0 WHERE view IS NULL;
+
+SELECT * FROM board ;
+
+# 프로필
 ALTER TABLE board ADD COLUMN profile VARCHAR(500);
-SELECT profile FROM board ;
+SELECT * FROM board;

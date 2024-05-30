@@ -13,6 +13,8 @@ public class Board {
     private String writer; //작성자 nickName 활용
     private Integer memberId;
     private LocalDateTime inserted;
+    private int view;
+
     private Integer numberOfImages;
     private List<BoardFile> fileList;
     private Integer numberOfLike;

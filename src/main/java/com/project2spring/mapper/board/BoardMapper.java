@@ -57,6 +57,7 @@ public interface BoardMapper {
             SELECT b.id, 
                    b.title,
                    m.nick_name writer,
+                b.view,
                    COUNT(DISTINCT f.name) number_of_images,
                    COUNT(DISTINCT l.member_id) number_of_like,
                    COUNT(c.id) number_of_comment
@@ -153,4 +154,10 @@ public interface BoardMapper {
     @Delete("DELETE FROM board_like WHERE member_id=#{memberId}")
     int deleteLikeByMemberId(Integer memberId);
 
+    @Update("""
+            UPDATE board SET
+            view = view + 1
+            WHERE id=#{id}
+            """)
+    int updateViewCount(Integer id);
 }
