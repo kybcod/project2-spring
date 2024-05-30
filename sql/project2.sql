@@ -183,4 +183,4 @@ CREATE TABLE comment(
     inserted DATETIME NOT NULL DEFAULT NOW()
 );
 
-SELECT * FROM comment;
+SELECT * FROM comment ORDER BY inserted DESC ;
