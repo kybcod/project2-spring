@@ -44,8 +44,7 @@ public class BoardController {
     // /api/board/5
     @GetMapping("{id}")
     public ResponseEntity get(@PathVariable Integer id, Authentication authentication) {
-        System.out.println("id = " + id);
-        Map<String, Object> result = (Map<String, Object>) service.get(id, authentication);
+        Map<String, Object> result = service.get(id, authentication);
 
         if (result.get("board") == null) {
             return ResponseEntity.notFound().build();

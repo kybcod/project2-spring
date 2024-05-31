@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -34,17 +33,11 @@ public class MemberService {
     private final BoardService boardService;
     private final CommentMapper commentMapper;
 
-    public void add(Member member, MultipartFile[] proFile) {
+    public void add(Member member) {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.setEmail(member.getEmail().trim());
         member.setNickName(member.getNickName().trim());
         mapper.insert(member);
-
-        if (proFile != null) {
-            for (MultipartFile proFile1 : proFile) {
-                mapper.insetFileName(member.getId(), proFile1.getOriginalFilename());
-            }
-        }
 
     }
 

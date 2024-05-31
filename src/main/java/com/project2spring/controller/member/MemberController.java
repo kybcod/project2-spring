@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -19,9 +18,9 @@ public class MemberController {
     private final MemberService service;
 
     @PostMapping("signup")
-    public ResponseEntity signup(Member member, @RequestParam(value = "files[]", required = false) MultipartFile[] proFile) {
+    public ResponseEntity signup(Member member) {
         if (service.validate(member)) {
-            service.add(member, proFile);
+            service.add(member);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();

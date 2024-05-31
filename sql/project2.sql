@@ -199,3 +199,27 @@ SELECT * FROM board;
 
 INSERT INTO board (title, content, member_id)
 SELECT title, content, member_id FROM board;
+
+SELECT * FROM member;
+INSERT INTO authority(member_id, name) VALUES (5,'admin');
+SELECT * FROM authority;
+
+ALTER TABLE member ADD COLUMN file VARCHAR(500);
+ALTER TABLE member DROP COLUMN file;
+
+CREATE TABLE member_file
+(
+    member_id INT          NOT NULL REFERENCES member (id),
+    name     VARCHAR(500) NOT NULL,
+    PRIMARY KEY (member_id, name)
+);
+ALTER TABLE board DROP COLUMN profile;
+SELECT * FROM board;
+
+ALTER TABLE board ADD COLUMN prev INT;
+ALTER TABLE board ADD COLUMN next INT;
+
+SELECT id, title, content, member_id, inserted, view, LEAD(id) OVER (ORDER BY id) AS next,
+       LAG(id) OVER (ORDER BY id) AS prev
+FROM board;
+
