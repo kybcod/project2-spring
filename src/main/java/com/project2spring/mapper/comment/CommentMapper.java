@@ -15,7 +15,7 @@ public interface CommentMapper {
     int insert(Comment comment);
 
     @Select("""
-            SELECT c.id, c.member_id, c.inserted, c.comment, m.nick_name
+            SELECT c.id,m.id, c.member_id, c.inserted, c.comment, m.nick_name
             FROM comment c JOIN member m ON c.member_id = m.id
             WHERE c.board_id=#{boardId} 
             ORDER BY c.id
