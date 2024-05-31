@@ -197,27 +197,5 @@ SELECT * FROM board ;
 ALTER TABLE board ADD COLUMN profile VARCHAR(500);
 SELECT * FROM board;
 
-USE prj2;
-SELECT
-    id,
-    title,
-    content,
-    member_id,
-    inserted,
-    profile,
-    LAG(id) OVER (ORDER BY id) AS previous_id,
-    LAG(title) OVER (ORDER BY id) AS previous_title,
-    LAG(content) OVER (ORDER BY id) AS previous_content,
-    LAG(member_id) OVER (ORDER BY id) AS previous_member_id,
-    LAG(inserted) OVER (ORDER BY id) AS previous_inserted,
-    LAG(profile) OVER (ORDER BY id) AS previous_profile,
-    LEAD(id) OVER (ORDER BY id) AS next_id,
-    LEAD(title) OVER (ORDER BY id) AS next_title,
-    LEAD(content) OVER (ORDER BY id) AS next_content,
-    LEAD(member_id) OVER (ORDER BY id) AS next_member_id,
-    LEAD(inserted) OVER (ORDER BY id) AS next_inserted,
-    LEAD(profile) OVER (ORDER BY id) AS next_profile
-FROM
-    board
-WHERE
-    id = 5;
+INSERT INTO board (title, content, member_id)
+SELECT title, content, member_id FROM board;
