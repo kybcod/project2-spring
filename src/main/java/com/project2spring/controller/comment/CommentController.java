@@ -3,6 +3,7 @@ package com.project2spring.controller.comment;
 import com.project2spring.domain.comment.Comment;
 import com.project2spring.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,12 @@ public class CommentController {
     }
 
     @DeleteMapping("remove")
-    public void remove(@RequestBody Comment comment) {
-        service.remove(comment);
+    public ResponseEntity remove(@RequestBody Comment comment, Authentication auth) {
+        if (service.hasAccess(comment, auth)) {
+            service.remove(comment);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 }
