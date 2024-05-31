@@ -3,6 +3,7 @@ package com.project2spring.service.board;
 import com.project2spring.domain.board.Board;
 import com.project2spring.domain.board.BoardFile;
 import com.project2spring.mapper.board.BoardMapper;
+import com.project2spring.mapper.comment.CommentMapper;
 import com.project2spring.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ public class BoardService {
     private final BoardMapper mapper;
     private final MemberMapper memberMapper;
     final S3Client s3Client;
+    private final CommentMapper commentMapper;
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
@@ -163,6 +165,9 @@ public class BoardService {
 
         // board_like 삭제
         mapper.deleteLikeByBoardId(id);
+
+        // 댓글 삭제 (comment)
+        commentMapper.deleteByBoardId(id);
 
         // board
         mapper.deleteById(id);

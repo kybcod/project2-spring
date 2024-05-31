@@ -27,4 +27,7 @@ public interface CommentMapper {
 
     @Select("SELECT * FROM comment WHERE id = #{id}")
     Comment selectById(Integer id);
+
+    @Delete("DELETE FROM comment WHERE board_id=#{boardId}")
+    int deleteByBoardId(Integer boardId);
 }
