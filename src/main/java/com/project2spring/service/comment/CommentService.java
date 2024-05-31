@@ -47,4 +47,8 @@ public class CommentService {
         }
         return true;
     }
+
+    public void edit(Comment comment, Authentication auth) {
+        mapper.update(comment);
+    }
 }
