@@ -7,6 +7,7 @@ import com.project2spring.mapper.comment.CommentMapper;
 import com.project2spring.mapper.member.MemberMapper;
 import com.project2spring.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -15,7 +16,14 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -32,12 +40,36 @@ public class MemberService {
     private final BoardMapper boardMapper;
     private final BoardService boardService;
     private final CommentMapper commentMapper;
+    final S3Client s3Client;
 
-    public void add(Member member) {
+    @Value("${aws.s3.bucket.name}")
+    String bucketName;
+
+    @Value("${image.src.prefix.profile}")
+    String srcPrefix;
+
+    public void add(Member member, MultipartFile file) throws IOException {
+
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.setEmail(member.getEmail().trim());
         member.setNickName(member.getNickName().trim());
         mapper.insert(member);
+
+        if (file != null) {
+//            String key = STR."prj/default/\{file.getOriginalFilename()}";
+            String key = STR."prj/\{member.getId()}/\{file.getOriginalFilename()}";
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    .build();
+
+            s3Client.putObject(objectRequest,
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            member.setProfile(file.getOriginalFilename());
+            mapper.updateProfile(member);
+        }
+
 
     }
 
@@ -59,7 +91,6 @@ public class MemberService {
         if (member.getPassword() == null || member.getPassword().isBlank()) {
             return false;
         }
-
         // 이메일 형식
         String emailPattern = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
         if (!member.getEmail().trim().matches(emailPattern)) {
@@ -98,10 +129,13 @@ public class MemberService {
     }
 
     public Member get(Integer id) {
-        return mapper.selectById(id);
+        Member member = mapper.selectById(id);
+        member.setAwsProfile(srcPrefix);
+        return member;
     }
 
-    public void delete(Integer id) {
+    public void delete(Integer id) throws IOException {
+
         // 회원이 쓴 게시물 조회
         List<Board> boardList = boardMapper.selectByMemberId(id);
 
@@ -113,6 +147,15 @@ public class MemberService {
 
         // 댓글 지우기
         commentMapper.deleteByMemberId(id);
+
+        Member member = mapper.selectById(id);
+        String key = STR."prj/\{id}/\{member.getProfile()}";
+        DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        s3Client.deleteObject(objectRequest);
 
         // board 지운 후 member 테이블 지우기
         mapper.deleteById(id);
@@ -130,7 +173,7 @@ public class MemberService {
         return passwordEncoder.matches(member.getPassword(), dbMember.getPassword());
     }
 
-    public Map<String, Object> modify(Member member, Authentication authentication) {
+    public Map<String, Object> modify(Member member, MultipartFile file, Authentication authentication) throws IOException {
         if (member.getPassword() != null && member.getPassword().length() > 0) {
             // 패스워드가 입력(변경)되었으니 바꾸기
             member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -139,7 +182,33 @@ public class MemberService {
             Member dbMember = mapper.selectById(member.getId());
             member.setPassword(dbMember.getPassword());
         }
+
+        if (file != null && !file.getOriginalFilename().equals(member.getProfile())) {
+
+            //삭제
+            String key = STR."prj/\{member.getId()}/\{member.getProfile()}";
+            DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(objectRequest);
+
+            // 추가
+            String newKey = STR."prj/\{member.getId()}/\{file.getOriginalFilename()}";
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(newKey)
+                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            member.setProfile(file.getOriginalFilename());
+            mapper.updateProfile(member);
+        }
+
         mapper.update(member);
+
 
         String token = "";
 

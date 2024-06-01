@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -18,9 +20,9 @@ public class MemberController {
     private final MemberService service;
 
     @PostMapping("signup")
-    public ResponseEntity signup(Member member) {
+    public ResponseEntity signup(Member member, @RequestParam(required = false) MultipartFile file) throws IOException {
         if (service.validate(member)) {
-            service.add(member);
+            service.add(member, file);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -61,6 +63,7 @@ public class MemberController {
         }
 
         Member member = service.get(id);
+        System.out.println("member = " + member);
         if (member == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -71,7 +74,7 @@ public class MemberController {
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity delete(@RequestBody Member member,
-                                 Authentication authentication) {
+                                 Authentication authentication) throws IOException {
         if (service.hasAccess(member, authentication)) {
             service.delete(member.getId());
             return ResponseEntity.ok().build();
@@ -81,9 +84,9 @@ public class MemberController {
 
     @PutMapping("modify")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity modify(@RequestBody Member member, Authentication authentication) {
+    public ResponseEntity modify(Member member, @RequestParam(value = "file", required = false) MultipartFile file, Authentication authentication) throws IOException {
         if (service.hasAccessModify(member, authentication)) {
-            Map<String, Object> result = service.modify(member, authentication);
+            Map<String, Object> result = service.modify(member, file, authentication);
             return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

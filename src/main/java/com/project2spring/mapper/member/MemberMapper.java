@@ -8,7 +8,8 @@ import java.util.List;
 @Mapper
 public interface MemberMapper {
 
-    @Insert("INSERT INTO member (email, password, nick_name) VALUES (#{email}, #{password}, #{nickName})")
+    @Insert("INSERT INTO member (email, password, nick_name, profile) VALUES (#{email}, #{password}, #{nickName}, #{profile})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Member member);
 
     @Select("SELECT * FROM member WHERE email = #{email}")
@@ -78,4 +79,13 @@ public interface MemberMapper {
             """)
     int insetFileName(Integer memberId, String name);
 
+    @Update("""
+            UPDATE member 
+            SET profile=#{profile}
+            WHERE id=#{id}
+            """)
+    int updateProfile(Member newMember);
+
+    @Delete("DELETE FROM member WHERE profile=#{profile}")
+    int deleteProfile(Integer id, String profile);
 }

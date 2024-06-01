@@ -197,6 +197,8 @@ SELECT * FROM board ;
 ALTER TABLE board ADD COLUMN profile VARCHAR(500);
 SELECT * FROM board;
 
+USE prj2;
+
 INSERT INTO board (title, content, member_id)
 SELECT title, content, member_id FROM board;
 
@@ -223,3 +225,6 @@ SELECT id, title, content, member_id, inserted, view, LEAD(id) OVER (ORDER BY id
        LAG(id) OVER (ORDER BY id) AS prev
 FROM board;
 
+select * from member;
+ALTER TABLE member ADD COLUMN profile VARCHAR(1000);
+DELETE FROM member WHERE id=24;
