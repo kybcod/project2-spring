@@ -205,6 +205,9 @@ public class MemberService {
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             member.setProfile(file.getOriginalFilename());
             mapper.updateProfile(member);
+        } else {
+            member.setProfile(null);
+            mapper.updateProfile(member);
         }
 
         mapper.update(member);
