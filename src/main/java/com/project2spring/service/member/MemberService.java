@@ -56,7 +56,6 @@ public class MemberService {
         mapper.insert(member);
 
         if (file != null) {
-//            String key = STR."prj/default/\{file.getOriginalFilename()}";
             String key = STR."prj/\{member.getId()}/\{file.getOriginalFilename()}";
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -205,7 +204,8 @@ public class MemberService {
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             member.setProfile(file.getOriginalFilename());
             mapper.updateProfile(member);
-        } else {
+        }
+        if (file != null) {
             member.setProfile(null);
             mapper.updateProfile(member);
         }
