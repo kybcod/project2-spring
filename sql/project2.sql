@@ -228,3 +228,5 @@ FROM board;
 select * from member;
 ALTER TABLE member ADD COLUMN profile VARCHAR(1000);
 DELETE FROM member WHERE id=24;
+
+USE prj2;
