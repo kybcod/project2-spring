@@ -18,6 +18,6 @@ public class ProductController {
 
     @GetMapping("/list")
     public List<Product> product() throws IOException {
-        return service.getProductData();
+        return service.getProduct();
     }
 }

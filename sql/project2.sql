@@ -230,3 +230,13 @@ ALTER TABLE member ADD COLUMN profile VARCHAR(1000);
 DELETE FROM member WHERE id=24;
 
 USE prj2;
+
+CREATE TABLE product (
+                         id INT AUTO_INCREMENT PRIMARY KEY,
+                         image VARCHAR(500) NOT NULL,
+                         title VARCHAR(500) NOT NULL
+);
+
+SELECT * FROM product;
+
+DELETE FROM product;
