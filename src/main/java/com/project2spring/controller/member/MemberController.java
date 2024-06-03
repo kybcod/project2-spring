@@ -63,7 +63,6 @@ public class MemberController {
         }
 
         Member member = service.get(id);
-        System.out.println("member = " + member);
         if (member == null) {
             return ResponseEntity.notFound().build();
         } else {

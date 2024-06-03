@@ -9,7 +9,6 @@ import java.util.List;
 public interface MemberMapper {
 
     @Insert("INSERT INTO member (email, password, nick_name, profile) VALUES (#{email}, #{password}, #{nickName}, #{profile})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Member member);
 
     @Select("SELECT * FROM member WHERE email = #{email}")
@@ -73,12 +72,6 @@ public interface MemberMapper {
             """)
     Integer countAll(String type, String keyword);
 
-    @Insert("""
-            INSERT INTO member_file (member_id, name)
-            VALUES (#{memberId}, #{name})
-            """)
-    int insetFileName(Integer memberId, String name);
-
     @Update("""
             UPDATE member 
             SET profile=#{profile}
@@ -86,6 +79,4 @@ public interface MemberMapper {
             """)
     int updateProfile(Member newMember);
 
-    @Delete("DELETE FROM member WHERE profile=#{profile}")
-    int deleteProfile(Integer id, String profile);
 }
